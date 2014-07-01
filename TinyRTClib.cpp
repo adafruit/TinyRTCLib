@@ -141,6 +141,13 @@ uint32_t DateTime::unixtime(void) const {
   return t;
 }
 
+long DateTime::secondstime(void) const {
+  long t;
+  uint16_t days = date2days(yOff, m, d);
+  t = time2long(days, hh, mm, ss);
+  return t;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS1307 implementation
 
