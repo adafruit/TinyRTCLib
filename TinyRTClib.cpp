@@ -5,7 +5,7 @@
 
 // This code could be merged into Adafruit RTClib if the
 //  Arduino IDE would properly handle conditionals
-//#ifdef __AVR__
+// #ifdef __AVR__
 #include <avr/pgmspace.h>
 // #if defined( __AVR_ATtinyX5__ )
 #include <TinyWireM.h>
@@ -15,12 +15,12 @@
 //   #include <Wire.h>
 //   #define WIRE Wire
 // #endif
-//#else
+// #else
 // #include <Wire.h>
 // #define PROGMEM
 // #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 // #define WIRE Wire1
-//#endif
+// #endif
 #include "TinyRTClib.h"
 
 #define DS1307_ADDRESS 0x68
@@ -99,7 +99,7 @@ DateTime::DateTime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour,
   ss = sec;
 }
 
-static uint8_t conv2d(const char *p) {
+static uint8_t conv2d(const char* p) {
   uint8_t v = 0;
   if ('0' <= *p && *p <= '9')
     v = *p - '0';
@@ -109,35 +109,35 @@ static uint8_t conv2d(const char *p) {
 // A convenient constructor for using "the compiler's time":
 //   DateTime now (__DATE__, __TIME__);
 // NOTE: using PSTR would further reduce the RAM footprint
-DateTime::DateTime(const char *date, const char *time) {
+DateTime::DateTime(const char* date, const char* time) {
   // sample input: date = "Dec 26 2009", time = "12:34:56"
   yOff = conv2d(date + 9);
   // Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
   switch (date[0]) {
-  case 'J':
-    m = date[1] == 'a' ? 1 : m = date[2] == 'n' ? 6 : 7;
-    break;
-  case 'F':
-    m = 2;
-    break;
-  case 'A':
-    m = date[2] == 'r' ? 4 : 8;
-    break;
-  case 'M':
-    m = date[2] == 'r' ? 3 : 5;
-    break;
-  case 'S':
-    m = 9;
-    break;
-  case 'O':
-    m = 10;
-    break;
-  case 'N':
-    m = 11;
-    break;
-  case 'D':
-    m = 12;
-    break;
+    case 'J':
+      m = date[1] == 'a' ? 1 : m = date[2] == 'n' ? 6 : 7;
+      break;
+    case 'F':
+      m = 2;
+      break;
+    case 'A':
+      m = date[2] == 'r' ? 4 : 8;
+      break;
+    case 'M':
+      m = date[2] == 'r' ? 3 : 5;
+      break;
+    case 'S':
+      m = 9;
+      break;
+    case 'O':
+      m = 10;
+      break;
+    case 'N':
+      m = 11;
+      break;
+    case 'D':
+      m = 12;
+      break;
   }
   d = conv2d(date + 4);
   hh = conv2d(time);
@@ -169,10 +169,16 @@ long DateTime::secondstime(void) const {
 ////////////////////////////////////////////////////////////////////////////////
 // RTC_DS1307 implementation
 
-static uint8_t bcd2bin(uint8_t val) { return val - 6 * (val >> 4); }
-static uint8_t bin2bcd(uint8_t val) { return val + 6 * (val / 10); }
+static uint8_t bcd2bin(uint8_t val) {
+  return val - 6 * (val >> 4);
+}
+static uint8_t bin2bcd(uint8_t val) {
+  return val + 6 * (val / 10);
+}
 
-uint8_t RTC_DS1307::begin(void) { return 1; }
+uint8_t RTC_DS1307::begin(void) {
+  return 1;
+}
 
 #if (ARDUINO >= 100)
 
@@ -186,7 +192,7 @@ uint8_t RTC_DS1307::isrunning(void) {
   return !(ss >> 7);
 }
 
-void RTC_DS1307::adjust(const DateTime &dt) {
+void RTC_DS1307::adjust(const DateTime& dt) {
   WIRE.beginTransmission(DS1307_ADDRESS);
   WIRE.write(0);
   WIRE.write(bin2bcd(dt.second()));
@@ -229,7 +235,7 @@ uint8_t RTC_DS1307::isrunning(void) {
   return !(ss >> 7);
 }
 
-void RTC_DS1307::adjust(const DateTime &dt) {
+void RTC_DS1307::adjust(const DateTime& dt) {
   WIRE.beginTransmission(DS1307_ADDRESS);
   WIRE.send(0);
   WIRE.send(bin2bcd(dt.second()));
@@ -267,10 +273,12 @@ DateTime RTC_DS1307::now() {
 
 long RTC_Millis::offset = 0;
 
-void RTC_Millis::adjust(const DateTime &dt) {
+void RTC_Millis::adjust(const DateTime& dt) {
   offset = dt.unixtime() - millis() / 1000;
 }
 
-DateTime RTC_Millis::now() { return (uint32_t)(offset + millis() / 1000); }
+DateTime RTC_Millis::now() {
+  return (uint32_t)(offset + millis() / 1000);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
